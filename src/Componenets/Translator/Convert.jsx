@@ -15,18 +15,19 @@ const Convert = ({ language, text }) => {
 
   useEffect(() => {
     const doTranslation = async () => {
-      const { data } = await axios.post(
-        "https://translation.googleapis.com/language/translate/v2",
-        {},
-        {
-          params: {
-            q: debouncedText,
-            target: language.value,
-            key: "AIzaSyCHUCmpR7cT_yDFHC98CZJy2LTms-IwDlM",
-          },
-        }
-      );
-      setTranslated(data.data.translations[0].translatedText);
+      const requests = {
+        method: "GET",
+        url: "https://nlp-translation.p.rapidapi.com/v1/translate",
+        params: { text: debouncedText, to: language.value, from: "en" },
+        headers: {
+          "x-rapidapi-key":
+            "cdacf640ebmsh95d84e3d85d6657p13cd6djsneebb01d2356f",
+          "x-rapidapi-host": "nlp-translation.p.rapidapi.com",
+        },
+      };
+      const { data } = await axios.request(requests);
+
+      setTranslated(data.translated_text[language.value]);
     };
     doTranslation();
   }, [language, debouncedText]);
