@@ -6,6 +6,7 @@ const Search = () => {
   const [term, setTerm] = useState("Programming");
   const [results, setResults] = useState([]);
   useEffect(() => {
+    // effect
     const searchWiki = async () => {
       const { data } = await axios.get("https://en.wikipedia.org/w/api.php", {
         params: {
@@ -18,10 +19,20 @@ const Search = () => {
       });
       setResults(data.query.search);
     };
-    if (term) {
+    if (term && !results.length) {
       searchWiki();
+    } else {
+      const timerId = setTimeout(() => {
+        if (term) {
+          searchWiki();
+        }
+      }, 900);
+      // cleanup
+      return () => {
+        clearTimeout(timerId);
+      };
     }
-  }, [term]);
+  }, [results.length, term]);
 
   // generating jsx
   const renderedResults = results.map((result) => {
