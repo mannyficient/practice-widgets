@@ -1,20 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const Dropdown = ({ options, selected, onSelectedChange, label }) => {
+const Dropdown = ({ label, options, selected, onSelectedChange }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef();
 
   useEffect(() => {
-    document.body.addEventListener(
-      "click",
-      (event) => {
-        if (ref.current.contains(event.target)) {
-          return;
-        }
-        setOpen(false);
-      },
-      { capture: true }
-    );
+    const onBodyClick = (event) => {
+      if (ref.current.contains(event.target) && ref.current === null) {
+        return;
+      }
+      setOpen(false);
+    };
+
+    document.body.addEventListener("click", onBodyClick);
+
+    return () => {
+      document.body.removeEventListener("click", onBodyClick);
+    };
   }, []);
 
   const renderedOptions = options.map((option) => {
@@ -23,9 +25,9 @@ const Dropdown = ({ options, selected, onSelectedChange, label }) => {
     }
     return (
       <div
-        onClick={() => onSelectedChange(option)}
         key={option.value}
         className='item'
+        onClick={() => onSelectedChange(option)}
       >
         {option.label}
       </div>
