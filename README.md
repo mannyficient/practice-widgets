@@ -1,5 +1,6 @@
 # Practice with functional components and hooks by creating several widgets on a single application 
 
+#[DEMO]-(https://widgets-manny.netlify.app/)
 ## Widgets 
 
 -    An Accordion component
